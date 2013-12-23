@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="GB2312"?>
+
+<project name="com.paipai.b2c.ApiData" basedir="." default="usage">
+    <!-- =================================================================== -->
+    <!-- 变量设置 -->
+    <!-- =================================================================== -->
+    <property file="build.properties"/>
+    <property name="project.root" value="."/>
+	
+    <!-- 代码目录 -->
+    <property name="src.dir" value="${project.root}/src"/>
+    <property name="src.java.dir" value="${src.dir}/java"/>
+    <property name="src.jsp.dir" value="${src.dir}/webroot"/>
+    <property name="src.config.dir" value="${src.dir}/config"/>
+
+    <!-- 临时编译目录 -->
+    <property name="build.dir" value="${project.root}/build"/>
+
+    <!-- Java编译CLASSPATH -->
+    <path id="master-classpath">
+        <fileset dir="${lib}"/>
+        <fileset dir="${project.lib}"/>
+
+    </path>
+
+    <target name="clean" description="清空所有输出文件包括build和部署目录">
+        <delete dir="${build.dir}"/>
+        <delete dir="${deploy.exploded.dir}"/>
+        <delete file="${deploy.ear.dir}/${project.name}.ear"/>
+    	
+    </target>
+
+    <target name="compile" description="编译Java文件">
+        <mkdir dir="${build.dir}"/>
+        <javac destdir="${build.dir}" target="1.5" debug="true"
+            deprecation="false" optimize="false" failonerror="true">
+            <src path="${src.java.dir}"/>
+            <classpath refid="master-classpath"/>
+        </javac>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- 创建用于发布的EAR包文件 -->
+    <!-- =================================================================== -->
+	<target name="ear" depends="clean,exploded-ear" description="创建用于发布的EAR包文件">
+			<jar jarfile="${deploy.ear.dir}/${project.name}-ejb.jar"
+	            basedir="${deploy.exploded.dir}/${project.name}-ejb.jar">
+				<manifest>
+					<attribute name="Built-By" value="lance" />
+					<attribute name="Class-Path" value="APP-INF/classes/ APP-INF/lib/aspectj/aspectjweaver.jar APP-INF/lib/spring.jar APP-INF/lib/paipaisdk.jar APP-INF/lib/aopalliance/aopalliance.jar APP-INF/lib/axis/axis.jar APP-INF/lib/axis/jaxrpc.jar APP-INF/lib/axis/saaj.jar APP-INF/lib/axis/wsdl4j.jar APP-INF/lib/cglib/asm.jar APP-INF/lib/cglib/cglib-2.0.1.jar APP-INF/lib/cos/cos.jar APP-INF/lib/dom4j/dom4j.jar APP-INF/lib/fileopen/encfile.jar APP-INF/lib/ibatis/ibatis-common-2.jar APP-INF/lib/ibatis/ibatis-dao-2.jar APP-INF/lib/ibatis/ibatis-sqlmap-2.jar APP-INF/lib/itext/itext-1.02b.jar APP-INF/lib/j2ee/jstl.jar APP-INF/lib/jakarta-commons/commons-attributes-api-SNAPSHOT.jar APP-INF/lib/jakarta-commons/commons-attributes-compiler-SNAPSHOT.jar APP-INF/lib/jakarta-commons/commons-beanutils.jar APP-INF/lib/jakarta-commons/commons-collections.jar APP-INF/lib/jakarta-commons/commons-dbcp.jar APP-INF/lib/jakarta-commons/commons-digester.jar APP-INF/lib/jakarta-commons/commons-discovery.jar APP-INF/lib/jakarta-commons/commons-fileupload.jar APP-INF/lib/jakarta-commons/commons-lang.jar APP-INF/lib/jakarta-commons/commons-logging.jar APP-INF/lib/jakarta-commons/commons-pool.jar APP-INF/lib/jakarta-commons/commons-validator.jar APP-INF/lib/jakarta-taglibs/standard.jar APP-INF/lib/jakarta-taglibs/taglibs-string.jar APP-INF/lib/jdom/jdom.jar APP-INF/lib/jotm/jotm.jar APP-INF/lib/jotm/xapool.jar APP-INF/lib/jug/jug-1.1.jar APP-INF/lib/junit/junit.jar APP-INF/lib/log4j/log4j-1.2.14.jar APP-INF/lib/mockobjects/mockobjects-core-0.09.jar APP-INF/lib/mockobjects/mockobjects-jdk1.3-0.09.jar APP-INF/lib/mockobjects/mockobjects-jdk1.3-j2ee1.3-0.09.jar  APP-INF/lib/poi/poi-2.5.jar APP-INF/lib/quartz/quartz.jar APP-INF/lib/regexp/jakarta-oro-2.0.7.jar " />
+				</manifest>
+			</jar>
+			
+			<jar jarfile="${deploy.ear.dir}/${project.name}.war" basedir="${deploy.exploded.dir}/${project.name}.war">
+				<manifest>
+					<attribute name="Built-By" value="lance" />
+					<attribute name="Class-Path" value="APP-INF/classes/ APP-INF/lib/aspectj/aspectjweaver.jar APP-INF/lib/spring.jar APP-INF/lib/paipaisdk.jar APP-INF/lib/aopalliance/aopalliance.jar APP-INF/lib/axis/axis.jar APP-INF/lib/axis/jaxrpc.jar APP-INF/lib/axis/saaj.jar APP-INF/lib/axis/wsdl4j.jar APP-INF/lib/cglib/asm.jar APP-INF/lib/cglib/cglib-2.0.1.jar APP-INF/lib/cos/cos.jar APP-INF/lib/dom4j/dom4j.jar APP-INF/lib/fileopen/encfile.jar APP-INF/lib/ibatis/ibatis-common-2.jar APP-INF/lib/ibatis/ibatis-dao-2.jar APP-INF/lib/ibatis/ibatis-sqlmap-2.jar APP-INF/lib/itext/itext-1.02b.jar APP-INF/lib/j2ee/jstl.jar APP-INF/lib/jakarta-commons/commons-attributes-api-SNAPSHOT.jar APP-INF/lib/jakarta-commons/commons-attributes-compiler-SNAPSHOT.jar APP-INF/lib/jakarta-commons/commons-beanutils.jar APP-INF/lib/jakarta-commons/commons-collections.jar APP-INF/lib/jakarta-commons/commons-dbcp.jar APP-INF/lib/jakarta-commons/commons-digester.jar APP-INF/lib/jakarta-commons/commons-discovery.jar APP-INF/lib/jakarta-commons/commons-fileupload.jar APP-INF/lib/jakarta-commons/commons-lang.jar APP-INF/lib/jakarta-commons/commons-logging.jar APP-INF/lib/jakarta-commons/commons-pool.jar APP-INF/lib/jakarta-commons/commons-validator.jar APP-INF/lib/jakarta-taglibs/standard.jar APP-INF/lib/jakarta-taglibs/taglibs-string.jar APP-INF/lib/jdom/jdom.jar APP-INF/lib/jotm/jotm.jar APP-INF/lib/jotm/xapool.jar APP-INF/lib/jug/jug-1.1.jar APP-INF/lib/junit/junit.jar APP-INF/lib/log4j/log4j-1.2.14.jar APP-INF/lib/mockobjects/mockobjects-core-0.09.jar APP-INF/lib/mockobjects/mockobjects-jdk1.3-0.09.jar APP-INF/lib/mockobjects/mockobjects-jdk1.3-j2ee1.3-0.09.jar  APP-INF/lib/poi/poi-2.5.jar APP-INF/lib/quartz/quartz.jar APP-INF/lib/regexp/jakarta-oro-2.0.7.jar   APP-INF/lib/sitemesh/sitemesh-2.3.jar APP-INF/lib/freemarker/freemarker.jar APP-INF/lib/xwork-2.0.4.jar  APP-INF/lib/ognl-2.6.11.jar  APP-INF/lib/struts2-core-2.0.9.jar  APP-INF/lib/struts2-sitemesh-plugin-2.0.9.jar" />
+				</manifest>
+			</jar>
+
+	
+        <jar jarfile="${deploy.ear.dir}/${project.name}.ear">
+            <fileset dir="${deploy.exploded.dir}">
+                <!-- context.properties不能打在ear包内 -->
+                <exclude name="APP-INF/classes/context-${project.name}.properties"/>
+                <include name="APP-INF/**"/>
+                <include name="META-INF/**"/>
+            </fileset>
+            <fileset dir="${deploy.ear.dir}">
+                <include name="${project.name}-ejb.jar"/>
+            </fileset>
+            <fileset dir="${deploy.ear.dir}">
+                <include name="${project.name}.war"/>
+            </fileset>
+        </jar>
+        <!-- 提取context.properties，它需要单独配置到CLASSPATH -->
+        <copy file="${src.config.dir}/core/context-${project.name}.properties"
+            todir="${deploy.ear.dir}"/>
+        <echo message="删除临时生成的ejb文件"/>
+        <delete>
+            <fileset dir="${deploy.ear.dir}">
+                <include name="${project.name}-ejb.jar"/>
+            </fileset>
+        </delete>
+        <echo message="删除临时生成的war文件"/>
+        <delete>
+            <fileset dir="${deploy.ear.dir}">
+                <include name="${project.name}.war"/>
+            </fileset>
+        </delete>
+		
+		<copy file="${deploy.ear.dir}/${project.name}.ear"
+		            todir="${jboss.deploy.dir}" overwrite="true"/>
+		
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- 创建展开目录形式的EAR应用 -->
+    <!-- =================================================================== -->
+    <target name="exploded-ear" depends="compile" description="创建展开目录形式的EAR应用(开发模式)">
+        <mkdir dir="${deploy.exploded.dir}/APP-INF/classes"/>
+        <mkdir dir="${deploy.exploded.dir}/APP-INF/lib"/>
+        <mkdir dir="${deploy.exploded.dir}/META-INF"/>
+        <mkdir dir="${deploy.exploded.dir}/${project.name}-ejb.jar/META-INF"/>
+        <mkdir dir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/lib"/>
+        <mkdir dir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/classes"/>
+
+        <!-- 创建META-INF -->
+        <copy todir="${deploy.exploded.dir}/META-INF">
+            <fileset dir="${src.config.dir}/app"/>
+        </copy>
+
+        <!-- 创建APP-INF的内容，包含web层和biz层共用的class, jar, xml, properties -->
+        <copy todir="${deploy.exploded.dir}/APP-INF/classes">
+            <fileset dir="${build.dir}/">
+                <include name="**/**"/>
+                <exclude name="**/web/**"/>
+                <exclude name="**/integration/**"/>
+                <exclude name="**/biz/action/**"/>
+                <exclude name="**/biz/service/**"/>
+                <exclude name="**/biz/util/**"/>
+            </fileset>
+            <fileset dir="${src.config.dir}/core"/>
+            <fileset dir="${src.config.dir}">
+                <include name="context-${project.name}.properties"/>
+            </fileset>
+        </copy>
+        <copy todir="${deploy.exploded.dir}/APP-INF/lib"
+            preservelastmodified="true">
+            <fileset dir="${lib}"/>
+        </copy>
+
+        <!-- 创建WAR的内容 -->
+        <copy todir="${deploy.exploded.dir}/${project.name}.war/WEB-INF">
+            <fileset dir="${src.config.dir}/web">
+                <exclude name="*.properties"/>
+            	<exclude name="struts.xml"/>
+            </fileset>
+        </copy>
+
+		<copy file="${src.config.dir}/web/struts.xml"
+		            todir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/classes" overwrite="true"/>  	
+    	
+        <!-- MessageBundle编码转换-->
+        <native2ascii src="${src.config.dir}/web"
+            dest="${deploy.exploded.dir}/${project.name}.war/WEB-INF/classes"
+            includes="*.properties"/>
+
+        <copy todir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/classes">
+            <fileset dir="${build.dir}/">
+                <include name="**/web/**"/>
+            </fileset>
+            <fileset dir="${src.java.dir}/">
+                <include name="**/web/**/*.xml"/>
+            </fileset>
+        </copy>
+        <copy todir="${deploy.exploded.dir}/${project.name}.war">
+            <fileset dir="${src.jsp.dir}/"/>
+        </copy>
+        
+        <native2ascii src="${src.config.dir}/biz"
+            dest="${deploy.exploded.dir}/${project.name}-ejb.jar"
+            includes="*.properties"/>
+        <copy todir="${deploy.exploded.dir}/${project.name}-ejb.jar">
+            <fileset dir="${build.dir}/">
+                <include name="**/biz/**"/>
+                <include name="**/integration/**"/>
+            </fileset>
+            <fileset dir="${src.config.dir}/biz">
+                <exclude name="*.properties"/>
+            </fileset>
+        </copy>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- 创建用于发布的WAR包文件 -->
+    <!-- =================================================================== -->
+    <target name="one-war" depends="clean,compile" description="创建用于发布的WAR包文件">
+
+        <mkdir dir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/lib"/>
+        <mkdir dir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/classes"/>
+
+
+
+        <copy todir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/lib"
+            preservelastmodified="true" flatten="true">
+            <fileset dir="${lib}"/>
+        </copy>
+
+        <!-- 创建WAR的内容 -->
+        <copy todir="${deploy.exploded.dir}/${project.name}.war/WEB-INF">
+					<fileset dir="${src.config.dir}/web">
+						<exclude name="*.properties" />
+						<exclude name="struts*.xml" />
+					</fileset>
+				</copy>
+			
+				<copy todir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/classes" overwrite="true">
+					<fileset dir="${src.config.dir}/web">
+						<include name="struts*.xml" />
+					</fileset>
+				</copy>
+        <!-- MessageBundle编码转换-->
+        <native2ascii src="${src.config.dir}/web"
+            dest="${deploy.exploded.dir}/${project.name}.war/WEB-INF/classes"
+            includes="*.properties"/>
+
+        <copy todir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/classes">
+            <fileset dir="${build.dir}/">
+                <include name="**/**"/>
+            </fileset>
+            <fileset dir="${src.config.dir}/core"/>
+            <fileset dir="${src.config.dir}">
+            	<include name="*.properties"/>
+            </fileset>           
+            <fileset dir="${src.java.dir}/">
+                <include name="**/web/**/*.xml"/>
+            </fileset>
+            <fileset dir="${src.config.dir}/biz">
+                <exclude name="*.properties"/>
+            </fileset>
+        </copy>
+        <copy todir="${deploy.exploded.dir}/${project.name}.war">
+            <fileset dir="${src.jsp.dir}/"/>
+        </copy>
+    	
+		<jar jarfile="${deploy.ear.dir}/${project.name}.war" basedir="${deploy.exploded.dir}/${project.name}.war">
+			<manifest>
+				<attribute name="Built-By" value="lance" />
+			</manifest>
+		</jar>      
+    	<delete dir="${tomcat.deploy.dir}/${project.name}"/>
+		<copy file="${deploy.ear.dir}/${project.name}.war"
+		            todir="${tomcat.deploy.dir}" overwrite="true"/>
+    </target>
+
+    <!-- =================================================================== -->
+    <!-- 创建展开目录形式war应用(开发模式) -->
+    <!-- =================================================================== -->
+	<target name="exploded-war" depends="clean,compile" description="创建展开目录形式war应用(开发模式)">
+
+		<mkdir dir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/lib" />
+		<mkdir dir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/classes" />
+
+
+
+		<copy todir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/lib" preservelastmodified="true" flatten="true">
+			<fileset dir="${lib}">
+				<exclude name="servlet-api.jar" />
+				<exclude name="j2ee.jar" />
+			</fileset>
+		</copy>
+
+		<!-- 创建WAR的内容 -->
+		<copy todir="${deploy.exploded.dir}/${project.name}.war/WEB-INF">
+			<fileset dir="${src.config.dir}/web">
+				<exclude name="*.properties" />
+				<exclude name="struts*.xml" />
+			</fileset>
+		</copy>
+
+		<copy todir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/classes" overwrite="true">
+			<fileset dir="${src.config.dir}/web">
+				<include name="struts*.xml" />
+			</fileset>
+		</copy>
+		<!-- MessageBundle编码转换-->
+		<native2ascii src="${src.config.dir}/web" dest="${deploy.exploded.dir}/${project.name}.war/WEB-INF/classes" includes="*.properties" />
+
+		<copy todir="${deploy.exploded.dir}/${project.name}.war/WEB-INF/classes">
+			<fileset dir="${build.dir}/">
+				<include name="**/**" />
+			</fileset>
+			<fileset dir="${src.config.dir}/core" />
+			<fileset dir="${src.config.dir}">
+				<include name="*.properties" />
+			</fileset>
+			<fileset dir="${src.java.dir}/">
+				<include name="**/web/**/*.xml" />
+			</fileset>
+			<fileset dir="${src.config.dir}/biz">
+				<exclude name="*.properties" />
+			</fileset>
+		</copy>
+		<copy todir="${deploy.exploded.dir}/${project.name}.war">
+			<fileset dir="${src.jsp.dir}/" />
+		</copy>
+
+		<copy todir="${tomcat.deploy.dir}/${project.name}">
+			<fileset dir="${deploy.exploded.dir}/${project.name}.war" />
+		</copy>	
+	
+	
+
+
+    </target>	
+	
+    <!-- =================================================================== -->
+    <!-- 开发部署copy jsp 到tomcat server -->
+    <!-- =================================================================== -->
+	<target name="copy-view" description="开发部署copy jsp 到tomcat server">
+
+		<copy todir="${tomcat.deploy.dir}/${project.name}">
+			<fileset dir="${src.jsp.dir}/" />
+		</copy>
+	</target>	
+	
+    <!-- =================================================================== -->
+    <!-- 帮助信息 -->
+    <!-- =================================================================== -->
+    <target name="usage">
+        <echo message=" Application Build File"/>
+        <echo message="用法：ant -[target]"/>
+        <echo message="------------------------------------------------------"/>
+        <echo message="[target]"/>
+        <echo message="clean        --> 清空所有输出文件包括build和部署目录"/>
+        <echo message="compile      --> 编译Java文件"/>
+        <echo message="ear          --> 创建用于发布的EAR包文件（配置文件已提出）"/>
+        <echo message="exploded-ear --> 创建展开目录形式的EAR应用(开发模式)"/>
+        <echo message="one-war      --> 创建用于发布的WAR包文件"/>      
+        <echo message="exploded-war --> 创建展开目录形式的WAR应用" />
+        <echo message="copy-view    --> 开发部署copy jsp 到tomcat server" />          
+        <echo message="------------------------------------------------------"/>
+    </target>
+</project>
